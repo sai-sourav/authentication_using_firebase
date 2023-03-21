@@ -9,7 +9,7 @@ const MainNavigation = () => {
   const history = useHistory();
   const logoutHandler = () => {
     userctx.setIsloggedIn(false);
-    userctx.token = "";
+    userctx.settoken("");
     history.replace('/auth');
   }
   return (

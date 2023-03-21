@@ -1,5 +1,6 @@
 import axios from "axios";
 import { useState, useRef, useContext } from "react";
+import { useHistory } from "react-router-dom";
 import userContext from "../../context/user-context";
 
 import classes from "./AuthForm.module.css";
@@ -9,7 +10,8 @@ const API_KEY = "AIzaSyAe5vc2TP8RDgqhG681woI8zJAXLHgu4sw";
 const AuthForm = () => {
   const [isLogin, setIsLogin] = useState(true);
   const [isLoading, setIsloading] = useState(false);
-  const userctx = useContext(userContext)
+  const userctx = useContext(userContext);
+  const history = useHistory();
 
   const emailref = useRef();
   const pswdref = useRef();
@@ -35,7 +37,8 @@ const AuthForm = () => {
           }
         );
         e.target.reset();
-        userctx.token = JSON.stringify(response.data.idToken);
+        userctx.settoken(response.data.idToken);
+        history.replace('/profile');
         userctx.setIsloggedIn(true);
       } catch (err) {
           alert(err.response.data.error.message);
