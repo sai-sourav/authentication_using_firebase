@@ -22,11 +22,10 @@ const AuthForm = () => {
     const enteredpswd = pswdref.current.value;
 
     if (isLogin) {
-    } else {
       try {
         setIsloading(true);
         const response = await axios.post(
-          `https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=${API_KEY}`,
+          `https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${API_KEY}`,
           {
             email: enteredemail,
             password: enteredpswd,
@@ -34,6 +33,22 @@ const AuthForm = () => {
           }
         );
         localStorage.setItem("token", JSON.stringify(response.data.idToken));
+        e.target.reset();
+      } catch (err) {
+          alert(err.response.data.error.message);
+      }
+      setIsloading(false);
+    } else {
+      try {
+        setIsloading(true);
+        await axios.post(
+          `https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=${API_KEY}`,
+          {
+            email: enteredemail,
+            password: enteredpswd,
+            returnSecureToken: true,
+          }
+        );
         e.target.reset();
       } catch (err) {
           alert(err.response.data.error.message);
