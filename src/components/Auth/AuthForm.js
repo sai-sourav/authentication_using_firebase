@@ -1,5 +1,6 @@
 import axios from "axios";
-import { useState, useRef } from "react";
+import { useState, useRef, useContext } from "react";
+import userContext from "../../context/user-context";
 
 import classes from "./AuthForm.module.css";
 
@@ -8,6 +9,7 @@ const API_KEY = "AIzaSyAe5vc2TP8RDgqhG681woI8zJAXLHgu4sw";
 const AuthForm = () => {
   const [isLogin, setIsLogin] = useState(true);
   const [isLoading, setIsloading] = useState(false);
+  const userctx = useContext(userContext)
 
   const emailref = useRef();
   const pswdref = useRef();
@@ -32,8 +34,9 @@ const AuthForm = () => {
             returnSecureToken: true,
           }
         );
-        localStorage.setItem("token", JSON.stringify(response.data.idToken));
         e.target.reset();
+        userctx.token = JSON.stringify(response.data.idToken);
+        userctx.setIsloggedIn(true);
       } catch (err) {
           alert(err.response.data.error.message);
       }

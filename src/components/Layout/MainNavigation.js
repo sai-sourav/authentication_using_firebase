@@ -1,8 +1,17 @@
-import { Link } from 'react-router-dom';
+import { useContext } from 'react';
+import { Link, useHistory } from 'react-router-dom';
+import userContext from '../../context/user-context';
 
 import classes from './MainNavigation.module.css';
 
 const MainNavigation = () => {
+  const userctx = useContext(userContext);
+  const history = useHistory();
+  const logoutHandler = () => {
+    userctx.setIsloggedIn(false);
+    userctx.token = "";
+    history.replace('/auth');
+  }
   return (
     <header className={classes.header}>
       <Link to='/'>
@@ -10,15 +19,18 @@ const MainNavigation = () => {
       </Link>
       <nav>
         <ul>
-          <li>
+          {!userctx.isloggedIn && <li>
             <Link to='/auth'>Login</Link>
-          </li>
-          <li>
+          </li>}
+          {userctx.isloggedIn &&
+            <>
+            <li>
             <Link to='/profile'>Profile</Link>
           </li>
           <li>
-            <button>Logout</button>
+            <button onClick={logoutHandler}>Logout</button>
           </li>
+          </>}
         </ul>
       </nav>
     </header>
