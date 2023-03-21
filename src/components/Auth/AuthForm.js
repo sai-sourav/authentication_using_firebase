@@ -7,6 +7,7 @@ const API_KEY = "AIzaSyAe5vc2TP8RDgqhG681woI8zJAXLHgu4sw";
 
 const AuthForm = () => {
   const [isLogin, setIsLogin] = useState(true);
+  const [isLoading, setIsloading] = useState(false);
 
   const emailref = useRef();
   const pswdref = useRef();
@@ -23,6 +24,7 @@ const AuthForm = () => {
     if (isLogin) {
     } else {
       try {
+        setIsloading(true);
         const response = await axios.post(
           `https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=${API_KEY}`,
           {
@@ -31,12 +33,12 @@ const AuthForm = () => {
             returnSecureToken: true,
           }
         );
-        const data = await response.json();
-        localStorage.setItem("token", data.idToken);
+        localStorage.setItem("token", JSON.stringify(response.data.idToken));
         e.target.reset();
       } catch (err) {
           alert(err.response.data.error.message);
       }
+      setIsloading(false);
     }
   };
 
@@ -53,7 +55,8 @@ const AuthForm = () => {
           <input type="password" id="password" required ref={pswdref} />
         </div>
         <div className={classes.actions}>
-          <button type="submit">{isLogin ? "Login" : "Create Account"}</button>
+          {!isLoading && <button type="submit">{isLogin ? "Login" : "Create Account"}</button>}
+          {isLoading && <p style={{color: "white"}}>sending request...</p>}
           <button
             type="button"
             className={classes.toggle}
