@@ -2,25 +2,18 @@ import { createContext, useState } from "react";
 
 const userContext = createContext({
     isloggedIn : "",
-    setIsloggedIn : () => {},
-    token : "",
-    settoken : () => {}
+    setIsloggedIn : () => {}
 })
 
 export const UserContextProvider = (props) => {
-    const [isloggedIn , setIsloggedIn] = useState(false);
-    const [token, setToken] = useState("")
+    const [isloggedIn , setIsloggedIn] = useState(localStorage.getItem('token') === null ? false : true);
     const updatelogin = () => {
         setIsloggedIn(prev => !prev)
     }
-    const updatetoken = (token) => {
-        setToken(token)
-    }
+
     const values ={
         isloggedIn : isloggedIn,
         setIsloggedIn : updatelogin,
-        token : token,
-        settoken : updatetoken
     }
 
     return(

@@ -37,7 +37,7 @@ const AuthForm = () => {
           }
         );
         e.target.reset();
-        userctx.settoken(response.data.idToken);
+        localStorage.setItem('token', response.data.idToken);
         history.replace('/profile');
         userctx.setIsloggedIn(true);
       } catch (err) {

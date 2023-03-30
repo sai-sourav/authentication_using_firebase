@@ -1,23 +1,22 @@
 import axios from 'axios';
-import { useContext, useRef } from 'react';
-import userContext from '../../context/user-context';
+import { useRef } from 'react';
+// import userContext from '../../context/user-context';
 import classes from './ProfileForm.module.css';
 const API_KEY = "AIzaSyAe5vc2TP8RDgqhG681woI8zJAXLHgu4sw";
 
 const ProfileForm = () => {
   const newpswdref = useRef();
-  const userctx = useContext(userContext)
+  // const userctx = useContext(userContext)
   const submitHandler = async (e) => {
     e.preventDefault();
     const newpswd = newpswdref.current.value;
     try{
         const response = await axios.post(`https://identitytoolkit.googleapis.com/v1/accounts:update?key=${API_KEY}`,{
-          idToken : userctx.token,
+          idToken : localStorage.getItem('token'),
           password : newpswd,
           returnSecureToken : true
         })
-        console.log(response.data);
-        userctx.settoken(response.data.idToken);
+        localStorage.setItem('token', response.data.idToken);
     }catch(err){
       console.log(err)
     }
