@@ -6,6 +6,7 @@ import userContext from "../../context/user-context";
 import classes from "./AuthForm.module.css";
 
 const API_KEY = "AIzaSyAe5vc2TP8RDgqhG681woI8zJAXLHgu4sw";
+let loggedintimer = "";
 
 const AuthForm = () => {
   const [isLogin, setIsLogin] = useState(true);
@@ -28,6 +29,7 @@ const AuthForm = () => {
     if (isLogin) {
       try {
         setIsloading(true);
+        clearTimeout(loggedintimer);
         const response = await axios.post(
           `https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${API_KEY}`,
           {
@@ -40,6 +42,9 @@ const AuthForm = () => {
         localStorage.setItem('token', response.data.idToken);
         history.replace('/profile');
         userctx.setIsloggedIn(true);
+        loggedintimer = setTimeout(() => {
+          userctx.setIsloggedIn(false);
+        }, 300000)
       } catch (err) {
           alert(err.response.data.error.message);
       }
